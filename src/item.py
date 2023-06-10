@@ -3,7 +3,7 @@ class Item:
     Класс для представления товара в магазине.
     """
     pay_rate = 1.0
-    list_all_items = []
+    all = []
 
     def __init__(self, name: str, price: float, quantity: int):
         """
@@ -17,7 +17,7 @@ class Item:
         self.price = price
         self.quantity = quantity
         # Добавляем созданный экземпляр класса в список instances
-        self.list_all_items.append(self)
+        self.all.append(self)
 
 
     def calculate_total_price(self):
