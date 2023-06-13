@@ -1,3 +1,7 @@
+import csv
+import os
+
+
 class Item:
     """
     Класс для представления товара в магазине.
@@ -5,7 +9,7 @@ class Item:
     pay_rate = 1.0
     all = []
 
-    def __init__(self, name: str, price: float, quantity: int):
+    def __init__(self, name: str, price: float, quantity: int) -> None:
         """
         Создание экземпляра класса item.
 
@@ -13,14 +17,13 @@ class Item:
         :param price: Цена за единицу товара.
         :param quantity: Количество товара в магазине.
         """
-        self.name = name
+        self.__name = name
         self.price = price
         self.quantity = quantity
-        # Добавляем созданный экземпляр класса в список instances
         self.all.append(self)
 
 
-    def calculate_total_price(self):
+    def calculate_total_price(self) -> float:
         """
         Рассчитывает общую стоимость конкретного товара в магазине.
 
@@ -33,3 +36,41 @@ class Item:
         Применяет установленную скидку для конкретного товара.
         """
         self.price = self.price * self.pay_rate
+
+    @property
+    def name(self) -> str:
+        """
+        Геттер для атрибута name. Возвращает наименование товара
+        """
+        return self.__name
+
+    @name.setter
+    def name(self, new_name) -> None:
+        """
+        Сеттер для атрибута name. Позволяет изменить наименование товара.
+        Проводит проверку длины наименования (не более 10 символов)
+        """
+        if len(new_name) <= 10:
+            self.__name = new_name
+        else:
+            print('Длина наименования товара превышает 10 символов')
+
+    @classmethod
+    def instantiate_from_csv(cls):
+        """
+        Класс-метод, инициализирующий экземпляры класса Item данными из файла src/items.csv
+        """
+        cls.all.clear()
+        with open(os.path.join(os.path.dirname(__file__), 'items.csv'), newline='') as csvfile:
+            reader = csv.DictReader(csvfile)
+
+            for row in reader:
+                name, price, quantity = row['name'], row['price'], row['quantity']
+                cls(name, float(price), int(quantity))
+
+    @staticmethod
+    def string_to_number(string):
+        if '.' in string:
+            return int(float(string))
+        else:
+            return int(string)
