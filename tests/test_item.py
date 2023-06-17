@@ -1,6 +1,16 @@
 from src.item import Item
 import pytest
 
+
+def test_repr():
+    item1 = Item("Смартфон", 10000, 20)
+    assert repr(item1) == "Item('Смартфон', 10000, 20)"
+    
+def test_str():
+    item1 = Item("Смартфон", 10000, 20)
+    assert str(item1) == 'Смартфон'
+
+
 def test_calculate_total_price():
     item1 = Item("Смартфон", 10000, 20)
     item2 = Item("Ноутбук", 20000, 5)
