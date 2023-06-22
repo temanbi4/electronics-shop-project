@@ -1,11 +1,12 @@
 from src.item import Item
+from src.phone import Phone
 import pytest
 
 
 def test_repr():
     item1 = Item("Смартфон", 10000, 20)
     assert repr(item1) == "Item('Смартфон', 10000, 20)"
-    
+
 def test_str():
     item1 = Item("Смартфон", 10000, 20)
     assert str(item1) == 'Смартфон'
@@ -69,3 +70,25 @@ def test_string_to_number():
 
     # Проверяем преобразование строки с десятичной точкой и десятичной частью в целое число
     assert Item.string_to_number('5.5') == 5
+
+def test_phone_init():
+    phone = Phone('iPhone 17', 123.99, 10, 7)
+    assert phone.name == 'iPhone 17'
+    assert phone.price == 123.99
+    assert phone.quantity == 10
+    assert phone.number_of_sim == 7
+
+def test_phone_number_of_sim_setter():
+    phone = Phone('iPhone SE', 499.99, 3, 1)
+    phone.number_of_sim = 2
+    assert phone.number_of_sim == 2
+
+def test_phone_number_of_sim_setter_invalid():
+    phone = Phone('Google Pixel 4a', 399.99, 2, 1)
+    with pytest.raises(ValueError):
+        phone.number_of_sim = 1.5
+
+def test_phone_number_of_sim_setter_zero():
+    phone = Phone('OnePlus 8T', 599.99, 4, 2)
+    with pytest.raises(ValueError):
+        phone.number_of_sim = 0
