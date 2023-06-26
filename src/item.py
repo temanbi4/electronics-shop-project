@@ -9,7 +9,7 @@ class Item:
     pay_rate = 1.0
     all = []
 
-    def __init__(self, name: str, price: float, quantity: int) -> None:
+    def __init__(self, name: str, price: float, quantity: int):
         """
         Создание экземпляра класса item.
 
@@ -64,7 +64,7 @@ class Item:
         if len(new_name) <= 10:
             self.__name = new_name
         else:
-            return "Длина наименования товара превышает 10 символов"
+            return f"Длина наименования товара превышает 10 символов"
 
     @classmethod
     def instantiate_from_csv(cls):

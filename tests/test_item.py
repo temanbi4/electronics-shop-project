@@ -1,5 +1,6 @@
 from src.item import Item
 from src.phone import Phone
+from src.KeyBoard import KeyBoard
 import pytest
 
 
@@ -92,3 +93,25 @@ def test_phone_number_of_sim_setter_zero():
     phone = Phone('OnePlus 8T', 599.99, 4, 2)
     with pytest.raises(ValueError):
         phone.number_of_sim = 0
+
+def test_keyboard_initial_language():
+    kb = KeyBoard('Blazing Pro RGB', 9600, 5)
+    assert kb.language == 'EN'
+
+def test_keyboard_change_language():
+    kb = KeyBoard('Blazing Pro RGB', 9600, 5)
+    kb.change_lang()
+    assert kb.language == 'RU'
+
+    kb.change_lang()
+    assert kb.language == 'EN'
+
+def test_keyboard_change_language_chain():
+    kb = KeyBoard('Blazing Pro RGB', 9600, 5)
+    kb.change_lang()
+    assert kb.language == 'RU'
+
+def test_keyboard_invalid_language():
+    kb = KeyBoard('Blazing Pro RGB', 9600, 5)
+    with pytest.raises(AttributeError):
+        kb.language = 'CH'
