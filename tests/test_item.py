@@ -2,6 +2,8 @@ from src.item import Item
 from src.phone import Phone
 from src.KeyBoard import Keyboard
 import pytest
+import os
+from src.item import Item, InstantiateCSVError, TypeErrorCsvZero
 
 
 def test_repr():
@@ -115,3 +117,37 @@ def test_keyboard_invalid_language():
     kb = Keyboard('Blazing Pro RGB', 9600, 5)
     with pytest.raises(AttributeError):
         kb.language = 'CH'
+
+def test_instantiate_from_csv_exception_FileNotFoundError():
+    Item.file_name = 'test'
+
+    with pytest.raises(FileNotFoundError):
+        Item.instantiate_from_csv()
+@pytest.fixture
+def empty_csv_file(tmpdir):
+    # Создаем пустой временный файл CSV
+    file_path = os.path.join(tmpdir, 'items.csv')
+    open(file_path, 'w').close()
+    yield file_path
+    # Удаляем временный файл
+    os.remove(file_path)
+
+@pytest.fixture
+def corrupted_csv_file(tmpdir):
+    # Создаем временный файл CSV с некорректным содержимым
+    file_path = os.path.join(tmpdir, 'items.csv')
+    with open(file_path, 'w') as csvfile:
+        csvfile.write('name,price\n')  # Не хватает столбца 'quantity'
+    yield file_path
+    # Удаляем временный файл
+    os.remove(file_path)
+
+def test_instantiate_from_csv_empty_file(empty_csv_file):
+    with pytest.raises(TypeErrorCsvZero):
+        Item.file_name = empty_csv_file
+        Item.instantiate_from_csv()
+
+def test_instantiate_from_csv_corrupted_file(corrupted_csv_file):
+    with pytest.raises(InstantiateCSVError):
+        Item.file_name = corrupted_csv_file
+        Item.instantiate_from_csv()

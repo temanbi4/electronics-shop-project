@@ -8,7 +8,7 @@ class Item:
     """
     pay_rate = 1.0
     all = []
-
+    file_name = 'items.csv'
     def __init__(self, name: str, price: float, quantity: int):
         """
         Создание экземпляра класса item.
@@ -71,13 +71,26 @@ class Item:
         """
         Класс-метод, инициализирующий экземпляры класса Item данными из файла src/items.csv
         """
-        cls.all.clear()
-        with open(os.path.join(os.path.dirname(__file__), 'items.csv'), newline='') as csvfile:
-            reader = csv.DictReader(csvfile)
+        try:
+            if os.path.getsize(os.path.join(os.path.dirname(__file__), cls.file_name)) == 0:
+                raise TypeErrorCsvZero('Файл item.csv пустой')
+            with open(os.path.join(os.path.dirname(__file__), cls.file_name), newline='') as csvfile:
+                reader = csv.DictReader(csvfile)
+                if 'name' not in reader.fieldnames or 'price' not in reader.fieldnames or 'quantity' not in reader.fieldnames:
+                    raise InstantiateCSVError('Файл item.csv поврежден')
+                for row in reader:
+                    name, price, quantity = row['name'], row['price'], row['quantity']
+                    cls(name, float(price), int(quantity))
 
-            for row in reader:
-                name, price, quantity = row['name'], row['price'], row['quantity']
-                cls(name, float(price), int(quantity))
+        except FileNotFoundError:
+            print('Файл item.csv не найден')
+        except InstantiateCSVError:
+            print('Файл item.csv поврежден')
+        except TypeErrorCsvZero:
+            print('Файл item.csv пустой')
+
+
+
 
     @staticmethod
     def string_to_number(string):
@@ -85,3 +98,22 @@ class Item:
             return int(float(string))
         else:
             return int(string)
+
+
+class InstantiateCSVError(Exception):
+    """Класс ошибки при поврежденном файле CSV"""
+    def __init__(self, message='Файл item.csv поврежден'):
+        self.message = message
+
+
+class TypeErrorCsvZero(Exception):
+    """Класс ошибки для пустого файла CSV"""
+
+    def __init__(self, message='Файл item.csv пустой'):
+        self.message = message
+
+class FileNotFoundError(Exception):
+    """Класс ошибки для пустого файла CSV"""
+
+    def __init__(self, message='Файл item.csv не найден'):
+        self.message = message
