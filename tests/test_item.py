@@ -130,6 +130,7 @@ def test_instantiate_from_csv_empty_file():
         Item.file_name = '../tests/test_empty_items.csv'
         Item.instantiate_from_csv()
 
+
 def test_instantiate_from_csv_bad_file():
     with pytest.raises(InstantiateCSVError):
         Item.file_name = "../tests/test_bad_items.csv"
