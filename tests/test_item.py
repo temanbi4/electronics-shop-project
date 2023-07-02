@@ -123,31 +123,14 @@ def test_instantiate_from_csv_exception_FileNotFoundError():
 
     with pytest.raises(FileNotFoundError):
         Item.instantiate_from_csv()
-@pytest.fixture
-def empty_csv_file(tmpdir):
-    # Создаем пустой временный файл CSV
-    file_path = os.path.join(tmpdir, 'items.csv')
-    open(file_path, 'w').close()
-    yield file_path
-    # Удаляем временный файл
-    os.remove(file_path)
 
-@pytest.fixture
-def corrupted_csv_file(tmpdir):
-    # Создаем временный файл CSV с некорректным содержимым
-    file_path = os.path.join(tmpdir, 'items.csv')
-    with open(file_path, 'w') as csvfile:
-        csvfile.write('name,price\n')  # Не хватает столбца 'quantity'
-    yield file_path
-    # Удаляем временный файл
-    os.remove(file_path)
 
-def test_instantiate_from_csv_empty_file(empty_csv_file):
+def test_instantiate_from_csv_empty_file():
     with pytest.raises(TypeErrorCsvZero):
-        Item.file_name = empty_csv_file
+        Item.file_name = '../tests/test_empty_items.csv'
         Item.instantiate_from_csv()
 
-def test_instantiate_from_csv_corrupted_file(corrupted_csv_file):
+def test_instantiate_from_csv_bad_file():
     with pytest.raises(InstantiateCSVError):
-        Item.file_name = corrupted_csv_file
+        Item.file_name = "../tests/test_bad_items.csv"
         Item.instantiate_from_csv()

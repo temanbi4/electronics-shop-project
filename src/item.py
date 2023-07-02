@@ -84,10 +84,13 @@ class Item:
 
         except FileNotFoundError:
             print('Файл item.csv не найден')
+            raise
         except InstantiateCSVError:
             print('Файл item.csv поврежден')
+            raise
         except TypeErrorCsvZero:
             print('Файл item.csv пустой')
+            raise
 
 
 
